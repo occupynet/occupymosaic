@@ -1,0 +1,11 @@
+@devkey = "youtube developer key"
+
+
+@twitter_consumer =  ''
+@twitter_consumer_secret = ''
+@twitter_oauth_token = ''
+@twitter_oauth_secret = ''
+
+
+@db_server = '127.0.0.1'
+@db_name = 'tweetstache'
