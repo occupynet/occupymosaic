@@ -77,6 +77,8 @@ get '/video/*' do
   params[:url] = params[:splat].join("/") 
   if (params[:url].split("youtube.com").size > 1)
     params[:url] << "?v=" + params[:v]
+    params[:url].gsub!("http:/","http://")
+    puts params[:url]
     client = YouTubeIt::Client.new(:dev_key => @devkey)
     vid = client.video_by(params[:url])
     #buid a json out
