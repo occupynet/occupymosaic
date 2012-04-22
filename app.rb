@@ -6,6 +6,7 @@ require 'hpricot'
 require 'haml'
 require 'open-uri'
 require 'youtube_it'
+require 'vimeo'
 require 'config.rb'
 
 MongoMapper::connection = Mongo::Connection.new(@db_server)
@@ -86,7 +87,19 @@ get '/video/*' do
     Youtube.collection.update({:url=>params[:url]},json,{:upsert=>true})
     content_type 'application/json'
     @json = json.to_json
-  else 
+    
+    
+  elsif (params[:url].split("vimeo.com").size > 1)
+    #parse out the vimeo id
+    video_id = params[:url].split("/").last
+    params[:url].gsub!("http:/","http://")
+    v = Vimeo::Simple::Video.info(video_id).parsed_response[0]
+    json = {:url =>params[:url], :title=>v["title"], :description=>v["description"],
+       :username=>v["user_url"], :date =>v["upload_date"]}
+    Youtube.collection.update({:url=>params[:url]},json,{:upsert=>true})
+    content_type 'application/json'
+    @json = json.to_json
+  else
     @json = "could not parse video"
   end
   haml :video
