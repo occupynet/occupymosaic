@@ -1,0 +1,44 @@
+!!!
+%html
+  %head
+  %title Tweetstache
+  %script{:type => "text/javascript", :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"}
+  %script{:type => "text/javascript", :src => "/tweets.js"}
+  %link{"rel" => "stylesheet", "href" => "/style.css", "type" => "text/css"}
+  %body
+    %h1 Tweetstache
+
+    %div#tweets
+    - @tweets.each do |tweet|
+      - if tweet["from_user"] !=nil
+        %div.tweet
+          - if tweet["video_embed"] != nil
+            %div.media
+              = tweet.video_embed
+          - if tweet.entities !=nil
+            - if tweet.entities["media"] !=nil
+              - tweet.entities["media"].each do |media|
+                %div.media
+                  %a{:href=>media["expanded_url"]}image
+                  %img{:src=>media["media_url"]}
+          %div.meta
+            %div.user
+              %img{:src=>tweet["profile_image_url"]}
+              =tweet["from_user"]
+              %a{:href=>"javascript:void(0)",:rel=>tweet["from_user_id"],:class=>"block"}block
+            %div.time
+              =tweet.created_at
+          %div.text
+            %a{:href=>"http://twitter.com/#!/" << tweet["from_user"]<<"/status/"<<tweet.id_str}=tweet.text
+
+
+    %div.next-prev
+      - if @prev !=nil
+        %div.prev
+          %div.button
+            %a{:href=>"/crawl/tweets/"<<@prev.to_s<<"/"<<@media}prev
+      - if @next !=nil
+        %div.next
+          %div.button
+            %a{:href=>"/crawl/tweets/"<<@next.to_s<<"/"<<@media}next
+      

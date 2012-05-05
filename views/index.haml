@@ -13,4 +13,5 @@
     %div#tweets
     - @tweets.each do |tweet|
       %div.tweet
-        = tweet.text
+      %a{:href=>"http://twitter.com/#!/"<<tweet.user["screen_name"]<<"/status/"<<tweet.id_str}=tweet.text
+      

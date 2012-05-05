@@ -7,11 +7,13 @@
   
   %body
     %div
-      %h1 Search Terms
-      %form{:action => '/crawl/', :method => 'post'}
-        %h2 Paste the url for the Tweet here
+      %h1 Crawl a Term
+      %form{:action => '/terms/', :method => 'post'}
+        %h2 Enter a term to crawl here
         %input{:type => 'text', :name => 'term' }
         %input{:type => 'submit'}
     %div
-      %h2 
-      
+      %div#terms
+        - @terms.each do |term|
+          %div.term
+          =term.term

@@ -12,6 +12,9 @@ body {
    width:400px;
    background-color:#ffffff;
  }
+ a:link, a:visited {
+   color:#333;
+ }
  
  form h2 {
    margin-bottom:30px;
@@ -71,3 +74,69 @@ body {
    height:200px;
    width:600px;
  }
+ 
+ .tweet {
+   padding:30px;
+   border:5px #ccc dashed;
+   border-radius:5px;
+   margin-bottom:60px;
+   height:160px;
+   clear:both;
+ }
+ .tweet .media {
+   width:240px;
+   float:right;
+ }
+ .media a {
+   display:block;
+ }
+ .tweet .meta {
+   width:160px;
+   float:left;
+   height:160px;
+   font-size:11px;
+   margin:15px 30px 15px 0px;
+ }
+ .tweet .meta img {
+   float:left;
+   margin-right:15px;
+ }
+ .meta .block {
+   display:block;
+ }
+ .tweet .text {
+   width:640px;
+   
+ }
+ .tweet .media img {
+   display:block;
+   height:120px;
+   margin:20px;
+   box-shadow:5px 5px 10px rgba(0,0,0,.25);
+ }
+ 
+
+ 
+ .button {
+   font-size:24px;
+   background-color:#fff;
+   border:5px solid #fc3;
+   border-radius:5px;
+   margin-top:5px;
+   padding:12px 20px 12px 20px;
+   width:40px;
+ }
+ .next-prev {
+   display:block;
+   height:20px;
+ }
+
+ .prev {
+   float:left;
+ }
+
+ .next {
+   float:right;
+   text-align:right;
+ }
+ 
