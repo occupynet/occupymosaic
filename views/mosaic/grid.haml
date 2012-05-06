@@ -1,0 +1,36 @@
+!!!
+%html
+  %head
+  %title #OccupyMosaic
+  %script{:type => "text/javascript", :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"}
+  %script{:type => "text/javascript", :src=> "/jquery.isotope.min.js"}
+  %script{:type => "text/javascript", :src=> "/jquery.infinitescroll.min.js"}
+  %script{:type => "text/javascript", :src=> "/mosaic.js"}
+  %link{"rel" => "stylesheet", "href" => "/style.css", "type" => "text/css"}
+  %body
+    %div#mosaic-container
+      %div#header
+        %h1 #Occupy
+        %h1{:style=>"color:#fc3"}Mosaic
+      %div#bigpic
+        %img{:src=>""}
+      %div#mosaic.mosaic
+        - @squares.each do |square|
+          - if square["entities"]["media"] !=nil
+            %div.grid{:style=> "height:"<<square["entities"]["media"][0]["sizes"]["small"]["h"].to_s<<"px"}
+              %img.tile{:src=>square["entities"]["media"][0]["media_url"]}
+              %div.overlay
+                %div.user
+                  %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user}="@"<<square.from_user
+                  %div.date
+                    %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= Time.parse(square.created_at).strftime("%H:%m:%S%p %e %b %Y")
+                %div.text
+                  = square.text
+                
+
+          - if square["video_embed"] !=nil
+            %div.grid.video  
+              = square["video_embed"]
+        %div#more 
+          %a{:href=>"/mosaic/json/"+@page.to_s}=@page.to_s
+        

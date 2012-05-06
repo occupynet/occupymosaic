@@ -5,6 +5,8 @@ require 'twitter'
 require 'hpricot'
 require 'haml'
 require 'open-uri'
+
+#gems for api services for the crawler
 require 'youtube_it'
 #https://github.com/matthooks/vimeo
 require 'vimeo'
@@ -12,10 +14,24 @@ require 'vimeo'
 #require 'twitpic-full'
 require 'config.rb'
 
+
+#subclasses
+require 'tweetstache/expand_url.rb'
+require 'tweetstache/mosaic.rb'
+
+#mongo
 MongoMapper::connection = Mongo::Connection.new(@db_server)
 MongoMapper::database = @db_name
 
+#mongodb collection classes
+
+#these are tweets that are intentionally saved for republishing
 class Tweet
+  include MongoMapper::Document
+end
+
+#these are all tweets crawled
+class CrawledTweet
   include MongoMapper::Document
 end
 
@@ -24,64 +40,19 @@ class Term
   timestamps!
 end
 
-class CrawledTweet
-  include MongoMapper::Document
-end
-
 class BlockedUser
   include MongoMapper::Document
 end
+#really this needs to be migrated to videos
 class Youtube
   include MongoMapper::Document
 end
 
-
-require 'net/http'
-
-module BarkingIguana
-  module ExpandUrl
-    def expand_urls!
-      ExpandUrl.services.each do |service|
-        gsub!(service[:pattern]) { |match|
-          ExpandUrl.expand($2, service[:host]) || $1
-        }
-      end
-    end
-
-    def expand_urls
-      s = dup
-      s.expand_urls!
-      s
-    end
-
-    def ExpandUrl.services
-      [
-        { :host => "tinyurl.com", :pattern => %r'(http://tinyurl\.com(/[\w/]+))' },
-        { :host => "is.gd", :pattern => %r'(http://is\.gd(/[\w/]+))' },
-        { :host => "bit.ly", :pattern => %r'(http://bit\.ly(/[\w/]+))' },
-        { :host => "youtu.be", :pattern => %r'(http://youtu\.be(/[\w/]+))'},
-        { :host => "dlvr.it", :pattern => %r'(http://dlvr\.it(/[\w/]+))'},
-        { :host => "flic.kr", :pattern => %r'(http://flic\.kr(/[\w/]+))'},
-        { :host => "n0.gd", :pattern => %r'(http://n0\.gd(/[\w/]+))'},
-        { :host => "huff.to", :pattern => %r'(http://huff\.to(/[\w/]+))'},
-        { :host => "ow.ly", :pattern => %r'(http://huff\.to(/[\w/]+))'}
-        
-      ]
-    end
-
-    def ExpandUrl.expand(path, host)
-      result = ::Net::HTTP.new(host).head(path)
-      case result
-      when ::Net::HTTPRedirection
-        result['Location']
-      end
-    end
-  end
+class Video
+  include MongoMapper::Document
 end
 
-class String
-  include BarkingIguana::ExpandUrl
-end
+
 
 
 #get each tweet for services twitpic, via.me,
@@ -176,16 +147,19 @@ get '/crawl/' do
       #197149879875813377
       @time.each do |date_until|
         puts term.inspect
+        #find one term to get max id
+        max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/#{term}/'},:limit=>1, :order=>:id_str.asc})
         puts date_until
         15.times do |p|
           begin 
             #m1gs since_id:196982181401341952 until:2012-05-03
+            #max id
           tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :until=>date_until,:include_entities=>1})
           rescue Twitter::Error::BadGateway
+          rescue NoMethodError
             puts "bad gateway"
-            sleep 120
+            sleep 600
              tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :until=>date_until,:include_entities=>1})
-
           end
           puts tweets.size
           tweets.each do | a_tweet |
@@ -210,6 +184,7 @@ get '/crawl/' do
                     vid = client.video_by(url["expanded_url"])
                     a_tweet.attrs["video_embed"] = vid.embed_html
                   rescue OpenURI::HTTPError => e
+                  
                   end
                 elsif (url["expanded_url"].split("vimeo.com").size > 1)
                   video_id = url["expanded_url"].split("/").last
@@ -354,7 +329,6 @@ get '/users/block/:user_id' do
 end
 
 #compile videos from crawled tweets
-
 get '/videos/compile?' do
   @tweets = CrawledTweets.all({:conditions=>{:video_embed=>{'$exists'=>true}}})
   @tweets.each do |tweet|
