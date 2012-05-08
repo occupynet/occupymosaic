@@ -281,7 +281,6 @@ body {
         -o-transition-duration: 0.4s;
            transition-duration: 0.4s;
  }
-/*
  .isotope {
    -webkit-transition-property: height, width;
       -moz-transition-property: height, width;
@@ -290,7 +289,6 @@ body {
            transition-property: height, width;
  }
 
-*/
  .isotope .isotope-item {
    -webkit-transition-property: opacity;
       -moz-transition-property: opacity;

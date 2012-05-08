@@ -36,13 +36,13 @@ $(document).ready(function(){
              itemSelector : '.grid',
              layoutMode : 'masonry',
              animationEngine: 'css',
-          });
+          }, setOverlays($(".mosaic").first()));
     
       $mosaic.infinitescroll({
         navSelector  : 'div#more',    // selector for the paged navigation 
         nextSelector : 'div#more a',  // selector for the NEXT link (to page 2)
         itemSelector : '.mosaic div.grid',     // selector for all items you'll retrieve
-        debug: true,
+        debug: false,
         animate: false,
         loading: {
             finishedMsg: 'No more pages to load.',

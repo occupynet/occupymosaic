@@ -137,8 +137,10 @@ get '/crawl' do
   
   while 1
     @terms = Term.all({:conditions=>{:is_active=>'yes'},:order=>:last_checked.desc})
+    puts @terms.inspect
     @blocked = BlockedUser.all
     @block = {}
+    sleep 1
     @blocked.each do |block|
       @block[block["user_id"]] = block["user_id"]
     end
@@ -150,18 +152,22 @@ get '/crawl' do
       @time.each do |date_until|
         puts term.inspect
         #find one term to get max id
-        #max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/'+term+'/'},:limit=>1, :order=>:id_str.asc})
+        max = CrawledTweet.all({:conditions=>{:timestamp=>{:$gte=>Time.parse(date_until).to_i},:text=>Regexp.new(term.term)},:limit=>1, :order=>:id_str.asc})
+        puts max.inspect
+
+        puts max[0].id_str
+        
         puts date_until
         15.times do |p|
           begin 
             #m1gs since_id:196982181401341952 until:2012-05-03
             #max id
-          tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :until=>date_until,:include_entities=>1})
+          tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :max_id=>max[0].id_str, :until=>date_until,:include_entities=>1})
           rescue Twitter::Error::BadGateway
           rescue NoMethodError
             puts "bad gateway"
             sleep 600
-             tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :until=>date_until,:include_entities=>1})
+             tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :max_id=>max[0].id_str, :until=>date_until,:include_entities=>1})
           end
           puts tweets.size
           
@@ -230,7 +236,7 @@ get '/crawl' do
           end
           sleep 2
         end
-        Term.collection.update({:term=>term.term},{:term=>term.term,:last_checked=>Time.now},{:upsert=>true})
+        Term.collection.update({:term=>term.term},{:term=>term.term,:last_checked=>Time.now,:is_active=>term.is_active},{:upsert=>true})
         sleep 30
       end
       
