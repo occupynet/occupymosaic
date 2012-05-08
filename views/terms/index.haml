@@ -15,4 +15,4 @@
       %div#terms
         - @terms.each do |term|
           %div.term
-          %a{:href=>"/terms/edit/"+term.id}=term.term
+          %a{:href=>"/terms/edit/"+term.id.to_s}=term.term
