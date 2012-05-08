@@ -150,7 +150,7 @@ get '/crawl' do
       @time.each do |date_until|
         puts term.inspect
         #find one term to get max id
-        max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/'+term+'/'},:limit=>1, :order=>:id_str.asc})
+        #max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/'+term+'/'},:limit=>1, :order=>:id_str.asc})
         puts date_until
         15.times do |p|
           begin 
