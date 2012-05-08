@@ -13,11 +13,13 @@ require 'vimeo'
 #https://github.com/meltingice/ruby-twitpic
 #require 'twitpic-full'
 require 'config.rb'
-
-
+#https://github.com/Instagram/instagram-ruby-gem
+#require 'instagram'
 #subclasses
+
 require 'tweetstache/expand_url.rb'
 require 'tweetstache/mosaic.rb'
+require 'tweetstache/terms.rb'
 
 #mongo
 MongoMapper::connection = Mongo::Connection.new(@db_server)
@@ -127,14 +129,14 @@ end
 #chicago, robeson school, 
 #between may 1 and may 2
 #anything from mapreport, mapreport2 mapreport3
-#philly, portland
+#philly, portland, chicago, sf, boston
 
 
-get '/crawl/' do 
+get '/crawl' do 
   #fitler out retweets
   
   while 1
-    @terms = Term.all({:order=>:last_checked.desc})
+    @terms = Term.all({:conditions=>{:is_active=>'yes'},:order=>:last_checked.desc})
     @blocked = BlockedUser.all
     @block = {}
     @blocked.each do |block|
@@ -148,7 +150,7 @@ get '/crawl/' do
       @time.each do |date_until|
         puts term.inspect
         #find one term to get max id
-        max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/#{term}/'},:limit=>1, :order=>:id_str.asc})
+        max = CrawledTweet.find({:conditions=>{:date_until_str=>date_until,:text=>'/'+term+'/'},:limit=>1, :order=>:id_str.asc})
         puts date_until
         15.times do |p|
           begin 
@@ -162,6 +164,7 @@ get '/crawl/' do
              tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :until=>date_until,:include_entities=>1})
           end
           puts tweets.size
+          
           tweets.each do | a_tweet |
             begin 
               a_tweet.attrs["timestamp"] = Time.parse(a_tweet.attrs["created_at"]).to_i
@@ -194,12 +197,22 @@ get '/crawl/' do
                 elsif (url["expanded_url"].split("ht.ly").size > 1)
                   a_tweet.attrs["block"] =1
             
+                elsif (url["expanded_url"]).split("instagr.am").size > 1
+                  #add the media link
+                    html = ""
+                    open(url["expanded_url"]) {|f|
+                      f.each_line {|line| html << line}
+                    }
+                   @html = Hpricot(html)
+                   a_tweet.attrs["entites.media.0.media_url"] =(@html/"img.photo")[0][:src]
+                   a_tweet.attrs["entities"]["media"] = [:expanded_url=>  (@html/"img.photo")[0][:src]]
+                  
+                end
                   #expanded url for twitpic
                   #http://instagr.am/
                   #yfrog
                   #via.me
                   #lockerz
-                end
               end
             end
             end
@@ -209,7 +222,9 @@ get '/crawl/' do
               a_tweet.attrs["block"] = 1
             end
             begin 
-            CrawledTweet.collection.update({:id_str=>a_tweet.attrs["id_str"].to_s},a_tweet.attrs, {:upsert => true})
+
+           a_tweet.attrs['id'] = nil  
+           a_tweet. CrawledTweet.collection.update({:id_str=>a_tweet.attrs["id_str"].to_s},a_tweet.attrs, {:upsert => true})
           rescue  
           end
           end
@@ -254,24 +269,6 @@ get "/crawl/tweets/:page/?:media:?" do
   @tweets = CrawledTweet.all({:conditions=>{:block=>{'$exists'=>false}},:limit=>25, :skip=>25*page,:order=>:timestamp.asc}.merge(filter_media[0]))
   haml :tweets
 end
-
-#flag to occupy map => worker pulls to to tweets collection
-get '/terms/' do 
-  @terms = Term.all({:order=>:term.asc})
-  haml :terms
-end
-
-post '/terms/' do 
-  Term.collection.update({:term=>params[:term]}, {:term=>params[:term],:last_checked=>Time.now},{:upsert=>true})
-  @terms = Term.all({:order=>:term.asc})
-  haml :terms
-end
-
-#search tweets for all with a term
-get '/terms/view/:term' do
-  
-end
-
 
 #grab a youtube video thru the api and return json of the same, for ajax within occupymap
 get '/video/*' do 

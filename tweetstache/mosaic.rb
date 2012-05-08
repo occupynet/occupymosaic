@@ -9,7 +9,7 @@ get '/mosaic/' do
 
 
   @squares = CrawledTweet.all({:limit=>30,:order=>:timestamp.asc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true}, :timestamp.gte=>1335848461, :timestamp.lte=>1335963661,:block=>{:$exists=>false}}})
-  puts @squares.size
+  puts @squares.inspect
   @page = 2
   haml 'mosaic/grid'.to_sym  
 end

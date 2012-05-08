@@ -16,14 +16,14 @@
         %img{:src=>""}
       %div#mosaic.mosaic
         - @squares.each do |square|
-          - if square["entities"]["media"] !=nil
+          - if square["entities"]["media"][0]["media_url"] !=nil
             %div.grid{:style=> "height:"<<square["entities"]["media"][0]["sizes"]["small"]["h"].to_s<<"px"}
               %img.tile{:src=>square["entities"]["media"][0]["media_url"]}
               %div.overlay
                 %div.user
                   %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user}="@"<<square.from_user
                   %div.date
-                    %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= Time.parse(square.created_at).strftime("%H:%m:%S%p %e %b %Y")
+                    %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= Time.parse(square.created_at).strftime("%H:%m%p %b %e, %Y")
                 %div.text
                   = square.text
                 
