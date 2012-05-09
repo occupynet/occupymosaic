@@ -136,7 +136,6 @@ end
 get '/crawl' do 
   #fitler out retweets
   
-  while 1
     @terms = Term.all({:conditions=>{:is_active=>'yes'},:order=>:last_checked.desc})
     puts @terms.inspect
     @blocked = BlockedUser.all
@@ -248,10 +247,7 @@ get '/crawl' do
         Term.collection.update({:term=>term.term},{:term=>term.term,:last_checked=>Time.now,:is_active=>term.is_active},{:upsert=>true})
         sleep 30
       end
-      
     end
-  
-  end
   haml :crawl
 end
 
