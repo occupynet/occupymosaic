@@ -172,6 +172,7 @@ get '/crawl' do
           rescue NoMethodError
             puts "bad gateway"
             sleep 120
+            tweets = []
           end
           puts tweets.size
           
