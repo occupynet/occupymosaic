@@ -172,10 +172,12 @@ get '/crawl' do
           rescue NoMethodError
             puts "bad gateway"
             sleep 120
+            tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :until=>date_until,:include_entities=>1}.merge(max_id))          end
+          begin 
+            puts tweets.size
+          rescue NoMethodError
             tweets = []
           end
-          puts tweets.size
-          
           tweets.each do | a_tweet |
             begin 
               a_tweet.attrs["timestamp"] = Time.parse(a_tweet.attrs["created_at"]).to_i
