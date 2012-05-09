@@ -336,6 +336,19 @@ get '/users/block/:user_id' do
     CrawledTweet.collection.update({:id_str=>tweet.attrs["id_str"].to_s},tweet.attrs, {:upsert => true})
   end
 end
+get '/block' do 
+  @tweet = {:text=>""}
+  haml :block
+end
+get '/block/:id_str' do 
+  @tweet = CrawledTweet.first({:conditions=>{:id_str=>params[:id_str]}})
+  @tweet['block'] =1
+  puts @tweet.inspect
+  @tweet.save
+  haml :block
+  
+end
+
 
 #compile videos from crawled tweets
 get '/videos/compile?' do
