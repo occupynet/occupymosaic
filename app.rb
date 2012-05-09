@@ -168,10 +168,10 @@ get '/crawl' do
             #max id
           tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :until=>date_until,:include_entities=>1}.merge(max_id))
           rescue Twitter::Error::BadGateway
+          rescue Twitter::Error::Forbidden 
           rescue NoMethodError
             puts "bad gateway"
-            sleep 600
-             tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :until=>date_until,:include_entities=>1}.merge(max_id))
+            sleep 120
           end
           puts tweets.size
           
