@@ -153,7 +153,7 @@ get '/crawl' do
       @time.each do |date_until|
         puts term.inspect
         #find one term to get max id
-        max = CrawledTweet.all({:conditions=>{:timestamp=>{:$gte=>Time.parse(date_until).to_i},:text=>Regexp.new(term.term)},:limit=>1, :order=>:id_str.asc})
+        max = CrawledTweet.all({:conditions=>{:timestamp=>{:$lte=>Time.parse(date_until).to_i},:text=>Regexp.new(term.term)},:limit=>1, :order=>:timestamp.asc})
         puts max.inspect
         if (max[0] !=nil )
           max_id = {:max_id=>max[0].id_str}        
