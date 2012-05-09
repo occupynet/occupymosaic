@@ -15,6 +15,7 @@ require 'vimeo'
 require 'config.rb'
 #https://github.com/Instagram/instagram-ruby-gem
 #require 'instagram'
+#https://github.com/ctagg/flickr
 #subclasses
 
 require 'tweetstache/expand_url.rb'
@@ -154,20 +155,23 @@ get '/crawl' do
         #find one term to get max id
         max = CrawledTweet.all({:conditions=>{:timestamp=>{:$gte=>Time.parse(date_until).to_i},:text=>Regexp.new(term.term)},:limit=>1, :order=>:id_str.asc})
         puts max.inspect
-
-        puts max[0].id_str
-        
+        if (max[0]['id_str'] !=nil )
+          max_id = {:max_id=>max[0].id_str}        
+        else
+          max_id = {}
+        end
+        puts max_id.inspect
         puts date_until
         15.times do |p|
           begin 
             #m1gs since_id:196982181401341952 until:2012-05-03
             #max id
-          tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :max_id=>max[0].id_str, :until=>date_until,:include_entities=>1})
+          tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i,:since_id =>196982181401341952, :until=>date_until,:include_entities=>1}.merge(max_id))
           rescue Twitter::Error::BadGateway
           rescue NoMethodError
             puts "bad gateway"
             sleep 600
-             tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :max_id=>max[0].id_str, :until=>date_until,:include_entities=>1})
+             tweets = Twitter.search(term.term.to_s + " -rt -facials -amateur",{:rpp=>100, :page => (p+1).to_i, :since_id =>196982181401341952, :until=>date_until,:include_entities=>1}.merge(max_id))
           end
           puts tweets.size
           
@@ -204,6 +208,7 @@ get '/crawl' do
                   a_tweet.attrs["block"] =1
             
                 elsif (url["expanded_url"]).split("instagr.am").size > 1
+                  begin OpenURI::HTTPError
                   #add the media link
                     html = ""
                     open(url["expanded_url"]) {|f|
@@ -211,8 +216,9 @@ get '/crawl' do
                     }
                    @html = Hpricot(html)
                    a_tweet.attrs["entites.media.0.media_url"] =(@html/"img.photo")[0][:src]
-                   a_tweet.attrs["entities"]["media"] = [:expanded_url=>  (@html/"img.photo")[0][:src]]
-                  
+                   a_tweet.attrs["entities"]["media"] = [:expanded_url=>  (@html/"img.photo")[0][:src],:size=>{:small=>{:h=>320}}]
+                  rescue 
+                  end
                 end
                   #expanded url for twitpic
                   #http://instagr.am/
