@@ -39,6 +39,3 @@ class Video
 end
 
 
-get '/' do 
-  haml 'mosaic/grid'.to_s
-end

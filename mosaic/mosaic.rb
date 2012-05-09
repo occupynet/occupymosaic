@@ -9,7 +9,7 @@ end
 
 
 #temporarily disable yfrog - images need correct dimensions
-get '/mosaic/.?:campaign?' do
+get '/.?:campaign?' do
   m = Mosaic.new
   m.page_size = 30
   @squares = m.grid(0)
@@ -17,7 +17,7 @@ get '/mosaic/.?:campaign?' do
   haml 'mosaic/grid'.to_sym  
 end
 
-get '/mosaic/json/?:campaign/:page' do
+get '/page/?:campaign/:page' do
   @page = params[:page].to_i+1
   m = Mosaic.new
   m.page_size = 30
