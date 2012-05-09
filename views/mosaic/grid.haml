@@ -30,6 +30,8 @@
           - if square["video_embed"] !=nil
             %div.grid.video  
               = square["video_embed"]
+      
+        %div#infscr-loading
         %div#more 
           %a{:href=>"/page/mayday/"+@page.to_s}=@page.to_s
         

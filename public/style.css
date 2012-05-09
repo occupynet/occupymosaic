@@ -186,6 +186,9 @@ body {
    z-index:100;
 
  }
+
+
+
  
  #mosaic-container #header h1 {
    color:#fff;
@@ -306,6 +309,9 @@ body {
            transition-duration: 0s;
  }
  
+ #infscr-loading {
+   
+ }
  
  #term {
    margin:20px;
