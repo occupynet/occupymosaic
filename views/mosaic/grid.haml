@@ -23,7 +23,7 @@
                 %div.user
                   %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user}="@"<<square.from_user
                   %div.date
-                    %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= (Time.parse(square.created_at)).strftime("%I:%M%p %b %e, %Y")
+                    %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= (Time.parse(square.created_at)-(3600*4)).strftime("%I:%M%p %b %e, %Y")
                 %div.text
                   = square.text
                 

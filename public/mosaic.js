@@ -52,7 +52,7 @@ $(document).ready(function(){
         function( newElements ) {
           $mosaic.isotope( 'appended', $( newElements ) ); 
           setOverlays($('.mosaic').last());
-          if ($(".grid").size() > 600 ) {
+          if ($(".grid").size() > 800 ) {
             var g = $(".grid");
             for (i=0; i < 30; i++) {
               $(g[i]).remove();

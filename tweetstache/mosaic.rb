@@ -16,7 +16,7 @@ end
 
 get '/mosaic/json/:page' do
   @page = params[:page].to_i+1
-  @squares = CrawledTweet.all({:limit=>30, :skip=>30*(@page-1),:order=>:timestamp.asc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true},:timestamp.gte=>1335848461, :timestamp.lte=>1335963661,:block=>{:$exists=>false}}})
+  @squares = CrawledTweet.all({:limit=>30, :skip=>30*(@page-1),:order=>:timestamp.asc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true},:timestamp.gte=>1335848461, :timestamp.lte=>1335960000,:block=>{:$exists=>false}}})
   haml 'mosaic/grid'.to_sym
 end
 
