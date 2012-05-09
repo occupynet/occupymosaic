@@ -27,11 +27,9 @@
                     %a{:target=>"_new", :href=>"http://twitter.com/#!/"<<square.from_user<<"/status/"<<square.id_str}= (Time.parse(square.created_at)-(3600*4)).strftime("%I:%M%p %b %e, %Y")
                 %div.text
                   = square.text
-                
-
           - if square["video_embed"] !=nil
             %div.grid.video  
               = square["video_embed"]
         %div#more 
-          %a{:href=>"/mosaic/json/"+@page.to_s}=@page.to_s
+          %a{:href=>"/mosaic/json/mayday/"+@page.to_s}=@page.to_s
         
