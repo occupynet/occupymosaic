@@ -8,8 +8,7 @@ $(document).ready(function(){
     $(this).toggle();
   })
     var setOverlays = function(el){
-      $(el).find(".grid").show();
-      $(el).find(".grid").unbind('hover');
+      $(el).find(".grid").unbind('hover') ;
       $(el).find(".overlay").unbind('click');
       $(el).find(".grid").each(function(i,e){
         var o = $(e).find(".overlay");
@@ -52,9 +51,15 @@ $(document).ready(function(){
         // call Isotope as a callback
         function( newElements ) {
           $mosaic.isotope( 'appended', $( newElements ) ); 
-          setOverlays($('.mosaic').last())
+          setOverlays($('.mosaic').last());
+          if ($(".grid").size() > 600 ) {
+            var g = $(".grid");
+            for (i=0; i < 30; i++) {
+              $(g[i]).remove();
+            }
+            g = null;
+          }
         }
       );
-      $(".grid").show();
       
 })
