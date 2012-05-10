@@ -9,10 +9,15 @@
   %link{"rel" => "stylesheet", "href" => "/style.css", "type" => "text/css"}
   %body
     %div#mosaic-container
+      %div#thumbnails{:style=>"display:none"}
+        img
       %div#header
         %h1 #Occupy
         %h1{:style=>"color:#fc3"}Mosaic
-        %h1  #MayDay #GeneralStrike
+        %div{:style=>"float:right"}
+          %h1  
+          %a{:href=>"/mayday"}#MayDay
+          %a{:href=>"/about"}About
       %div#bigpic
         %img{:src=>""}
       %div#mosaic.mosaic

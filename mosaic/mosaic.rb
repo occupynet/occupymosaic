@@ -6,7 +6,9 @@ class Mosaic
   end
 end
 
-
+get '/about' do 
+  haml :about
+end
 
 #temporarily disable yfrog - images need correct dimensions
 get '/.?:campaign?' do

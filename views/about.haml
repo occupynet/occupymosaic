@@ -1,0 +1,39 @@
+!!!
+%html
+  %head
+  %title #OccupyMosaic
+  %script{:type => "text/javascript", :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"}
+  %script{:type => "text/javascript", :src=> "/jquery.isotope.min.js"}
+  %script{:type => "text/javascript", :src=> "/jquery.infinitescroll.min.js"}
+  %script{:type => "text/javascript", :src=> "/mosaic.js"}
+  %link{"rel" => "stylesheet", "href" => "/style.css", "type" => "text/css"}
+  %body
+    %div#mosaic-container
+      %div#header
+        %h1 #Occupy
+        %h1{:style=>"color:#fc3"}Mosaic
+        %div{:style=>"float:right"}
+          %h1  
+            %a{:href=>"/mayday"}#MayDay
+          %a{:href=>"/about"}About
+      %div#mosaic.about
+        %div.bigger OccupyMosaic: Mayday shows a timeline of some of the many Occupy actions that happened as part of the May Day General Strike.  The photos start at the beginning of May Day and continue in chronological order until the early morning of May 2, 2012.  The site is meant to show a visual narrative of what happened during that day.
+        %h2 Who made OccupyMosaic?
+        %div.content Everyone who participated in May Day events helped to make OccupyMosaic.  Occupy.net helped assemble some of the thousands of photos that were tweeted that day.
+        %h2 How did you chose the pictures?
+        %div.content We searched twitter for several hashtags related to the May Day General Strike and pulled in anything that we could find that had a photo attached.  
+        %div.content Here's a list of the hashtags we searched: #55water #888turk #99pickets #99pkts #baym1gs #bikebloc #bikeswarm #bryantpark #chicago #m1gs #chicago #mayday #freeuniversity #guitarmy #liberatemayday #liberatepdx #m1dc #m1gs #m1nyc #m1nyc  #m1gs #m1pdx #mayday #nypd #occupyboston #occupymap #ochi #oo #opdx #osf #ows #owsmap #peoplesassembly #unionsq #walkitout #wildcat
+        %div.content Not every photo service is currently supported (right now we're showing images from Twitter and Instagram, with plans to support more services very soon.)  Twitter only returns a random sampling of tweets when you search thru the public API so this isn't nearly a comprehensive collection of everything that was tweeted on that day.
+        %h2 Will there be more photo mosaics like this?  
+        %div.content We hope so.  We'd like to have many of these on a variety of topics. 
+        %h2 Can I use this for my own project?  
+        %div.content 
+          Certainly.  The code can be downloaded from our github repository:
+          %a{:href=>"http://github.com/occupynet/occupymosaic"}Occupy Mosaic
+        %div.content 
+          The twitter search app which found the images can be downloaded from 
+          %a{:href=>"http://github.com/occupynet/tweetstache"}Tweetstache
+        %div.content Both run on Sinatra, with MongoDB as the datastore.  The front-end display is powered by Isotope and Infinitescroll.
+        %h2 I'd like to get invovled with projects like this.
+        %div.content Great.  Contact tech@occupy.net
+        
