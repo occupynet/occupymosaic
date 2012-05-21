@@ -45,7 +45,7 @@ get '/page/?:campaign/:page' do
   m.campaign = params[:campaign]
   m.page_size = 30
   @campaign = m.campaign
-  @meta = m.meta_info
   @squares =m.grid(@page)
+  @meta = m.meta_info
   haml 'mosaic/grid'.to_sym  
 end
