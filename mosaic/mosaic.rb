@@ -7,7 +7,7 @@ class Mosaic
     end
     @conditions = {
       :mayday=>{:limit=>@page_size, :skip=>skip * @page_size,:order=>:timestamp.asc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true}, 'entities.media.0.sizes.small.h'=>{:$exists=>true}, 'entities.urls.0.expanded_url'=>{'$not'=>/yfrog/}, :timestamp.gte=>1335848461, :timestamp.lte=>1335963661,:block=>{:$exists=>false}}},
-      :chicagonato=>{:skip=>skip * @page_size,:limit=>30,:order=>:timestamp.desc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true},'entities.media.0.sizes.small.h'=>{:$exists=>true},:timestamp.gte=>1337302861, :timestamp.lte=>1337602332,:block=>{:$exists=>false}}}
+      :chicagonato=>{:skip=>skip * @page_size,:limit=>30,:order=>:timestamp.desc, :conditions=>{'entities.media.0.media_url'=>{:$exists=>true},'entities.media.0.sizes.small.h'=>{:$exists=>true},:timestamp.gte=>1337302861, :timestamp.lte=>1380949261,:block=>{:$exists=>false}}}
     }
     @meta = {
       :mayday =>{:page_title =>"Occupy Mosaic - May Day",:description=>"A mosaic of photos that were posted worldwide during the May Day General Strike"},
