@@ -1,8 +1,8 @@
 !!!
 %html
   %head
-  %title #OccupyMosaic - MayDay
-  %meta{:name=>"description", :content=>"A mosaic of photos that were posted worldwide during the May Day General Strike"}
+  %title=@meta[:page_title]
+  %meta{:name=>"description", :content=>@meta[:description]}
   %script{:type => "text/javascript", :src=> "http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"}
   %script{:type => "text/javascript", :src=> "/jquery.isotope.min.js"}
   %script{:type => "text/javascript", :src=> "/jquery.infinitescroll.min.js"}
@@ -17,6 +17,7 @@
         %h1{:style=>"color:#fc3"}Mosaic
         %div{:style=>"float:right"}
           %h1  
+          %a{:href=>"/chicagonato"}#NoNATO
           %a{:href=>"/mayday"}#MayDay
           %a{:href=>"/about"}About
       %div#bigpic
